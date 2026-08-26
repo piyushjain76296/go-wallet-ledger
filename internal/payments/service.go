@@ -78,7 +78,7 @@ func (s *serviceImpl) ProcessWebhook(ctx context.Context, provider string, paylo
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback(ctx)
+	defer func() { _ = tx.Rollback(ctx) }()
 
 	// 1. Webhook Deduplication
 	_, err = tx.Exec(ctx, `

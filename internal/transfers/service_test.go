@@ -32,7 +32,7 @@ func TestTransferService_Concurrency(t *testing.T) {
 	defer db.Close()
 
 	// Clear tables (order matters due to FK constraints)
-	db.Exec(ctx, "TRUNCATE outbox_events, ledger_entries, ledger_transactions, transfers, wallets, accounts, idempotency_keys, users CASCADE")
+	_, _ = db.Exec(ctx, "TRUNCATE outbox_events, ledger_entries, ledger_transactions, transfers, wallets, accounts, idempotency_keys, users CASCADE")
 
 	// Dependencies
 	walletRepo := wallets.NewRepository(db)
@@ -42,18 +42,18 @@ func TestTransferService_Concurrency(t *testing.T) {
 
 	// Create 2 test users (owner_id FK references users)
 	var user1ID, user2ID string
-	db.QueryRow(ctx, "INSERT INTO users (email, password_hash, role) VALUES ('user1@test.com', 'hash', 'USER') RETURNING id").Scan(&user1ID)
-	db.QueryRow(ctx, "INSERT INTO users (email, password_hash, role) VALUES ('user2@test.com', 'hash', 'USER') RETURNING id").Scan(&user2ID)
+	_ = db.QueryRow(ctx, "INSERT INTO users (email, password_hash, role) VALUES ('user1@test.com', 'hash', 'USER') RETURNING id").Scan(&user1ID)
+	_ = db.QueryRow(ctx, "INSERT INTO users (email, password_hash, role) VALUES ('user2@test.com', 'hash', 'USER') RETURNING id").Scan(&user2ID)
 
 	// Create 2 test accounts (schema has: id, type, currency, created_at)
 	var account1ID, account2ID string
-	db.QueryRow(ctx, "INSERT INTO accounts (type, currency) VALUES ('USER', 'USD') RETURNING id").Scan(&account1ID)
-	db.QueryRow(ctx, "INSERT INTO accounts (type, currency) VALUES ('USER', 'USD') RETURNING id").Scan(&account2ID)
+	_ = db.QueryRow(ctx, "INSERT INTO accounts (type, currency) VALUES ('USER', 'USD') RETURNING id").Scan(&account1ID)
+	_ = db.QueryRow(ctx, "INSERT INTO accounts (type, currency) VALUES ('USER', 'USD') RETURNING id").Scan(&account2ID)
 
 	// Create 2 test wallets (schema has: owner_id, account_id, currency, available_balance, locked_balance, status, version)
 	var wallet1ID, wallet2ID string
-	db.QueryRow(ctx, "INSERT INTO wallets (owner_id, account_id, currency, available_balance, locked_balance, status, version) VALUES ($1, $2, 'USD', 1000, 0, 'ACTIVE', 1) RETURNING id", user1ID, account1ID).Scan(&wallet1ID)
-	db.QueryRow(ctx, "INSERT INTO wallets (owner_id, account_id, currency, available_balance, locked_balance, status, version) VALUES ($1, $2, 'USD', 1000, 0, 'ACTIVE', 1) RETURNING id", user2ID, account2ID).Scan(&wallet2ID)
+	_ = db.QueryRow(ctx, "INSERT INTO wallets (owner_id, account_id, currency, available_balance, locked_balance, status, version) VALUES ($1, $2, 'USD', 1000, 0, 'ACTIVE', 1) RETURNING id", user1ID, account1ID).Scan(&wallet1ID)
+	_ = db.QueryRow(ctx, "INSERT INTO wallets (owner_id, account_id, currency, available_balance, locked_balance, status, version) VALUES ($1, $2, 'USD', 1000, 0, 'ACTIVE', 1) RETURNING id", user2ID, account2ID).Scan(&wallet2ID)
 
 	// Goal: Fire 100 concurrent transfers:
 	// 50 from Wallet1 -> Wallet2 (amount = 10)

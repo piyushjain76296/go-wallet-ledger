@@ -34,7 +34,7 @@ func (r *postgresRepository) CreateWalletAndAccount(ctx context.Context, ownerID
 	if err != nil {
 		return nil, err
 	}
-	defer tx.Rollback(ctx)
+	defer func() { _ = tx.Rollback(ctx) }()
 
 	var accountID string
 	err = tx.QueryRow(ctx, `

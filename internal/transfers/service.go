@@ -59,7 +59,7 @@ func (s *serviceImpl) ExecuteTransfer(ctx context.Context, req CreateTransferReq
 	if err != nil {
 		return nil, err
 	}
-	defer tx.Rollback(ctx)
+	defer func() { _ = tx.Rollback(ctx) }()
 
 	// 1. Deadlock Prevention: Order wallet IDs to ensure consistent lock acquisition
 	firstLock, secondLock := req.SourceWalletID, req.DestinationWalletID

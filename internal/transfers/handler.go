@@ -72,7 +72,7 @@ func (h *Handler) HandleTransfer(w http.ResponseWriter, r *http.Request) {
 	// Ensure caller owns the source wallet
 	sourceWallet, err := h.walletRepo.GetWalletByID(r.Context(), req.SourceWalletID)
 	if err != nil || (sourceWallet.OwnerID != claims.UserID && claims.Role != auth.RoleSystem) {
-		h.idemRepo.Complete(r.Context(), idemKey, []byte(`{"error":"unauthorized access to source wallet"}`), http.StatusForbidden)
+		_ = h.idemRepo.Complete(r.Context(), idemKey, []byte(`{"error":"unauthorized access to source wallet"}`), http.StatusForbidden)
 		http.Error(w, "forbidden", http.StatusForbidden)
 		return
 	}
@@ -81,13 +81,13 @@ func (h *Handler) HandleTransfer(w http.ResponseWriter, r *http.Request) {
 	transfer, err := h.service.ExecuteTransfer(r.Context(), req, idemKey)
 	if err != nil {
 		respBytes, _ := json.Marshal(map[string]string{"error": err.Error()})
-		h.idemRepo.Complete(r.Context(), idemKey, respBytes, http.StatusBadRequest)
+		_ = h.idemRepo.Complete(r.Context(), idemKey, respBytes, http.StatusBadRequest)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	respBytes, _ := json.Marshal(transfer)
-	h.idemRepo.Complete(r.Context(), idemKey, respBytes, http.StatusCreated)
+	_ = h.idemRepo.Complete(r.Context(), idemKey, respBytes, http.StatusCreated)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

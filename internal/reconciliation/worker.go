@@ -49,19 +49,15 @@ func (w *Worker) RunReconciliation(ctx context.Context) {
 	debits, credits, txnCount, err := w.repo.CheckGlobalLedgerBalance(ctx)
 	if err != nil {
 		slog.Error("Reconciliation global ledger check failed", "error", err)
-		w.repo.CompleteRun(ctx, run.ID, StatusFailed, 0, 0, 0)
+		_ = w.repo.CompleteRun(ctx, run.ID, StatusFailed, 0, 0, 0)
 		return
 	}
 
 	if debits != credits {
 		status = StatusFailed
 		mismatchesFound++
-		details := map[string]interface{}{
-			"total_debits":  debits,
-			"total_credits": credits,
-			"difference":    debits - credits,
-		}
-		w.repo.RecordMismatch(ctx, run.ID, "SYSTEM", "GLOBAL_LEDGER", "IMBALANCED_LEDGER", details)
+		details := fmt.Sprintf("Imbalanced Ledger! Debits: %d, Credits: %d", debits, credits)
+		_ = w.repo.RecordMismatch(ctx, run.ID, "SYSTEM", "GLOBAL_LEDGER", "IMBALANCED_LEDGER", details)
 		slog.Error("CRITICAL: Global ledger imbalance detected!", "debits", debits, "credits", credits)
 	}
 
@@ -69,7 +65,7 @@ func (w *Worker) RunReconciliation(ctx context.Context) {
 	walletsChecked, walletMismatches, err := w.repo.CheckWalletBalances(ctx)
 	if err != nil {
 		slog.Error("Reconciliation wallet check failed", "error", err)
-		w.repo.CompleteRun(ctx, run.ID, StatusFailed, walletsChecked, txnCount, mismatchesFound)
+		_ = w.repo.CompleteRun(ctx, run.ID, StatusFailed, walletsChecked, txnCount, mismatchesFound)
 		return
 	}
 
@@ -77,8 +73,9 @@ func (w *Worker) RunReconciliation(ctx context.Context) {
 		status = StatusFailed
 		mismatchesFound++
 		walletID := fmt.Sprintf("%v", mismatch["wallet_id"])
-		w.repo.RecordMismatch(ctx, run.ID, "WALLET", walletID, "BALANCE_MISMATCH", mismatch)
-		slog.Error("CRITICAL: Wallet balance mismatch detected!", "wallet_id", walletID, "mismatch", mismatch)
+		mismatchDetails := fmt.Sprintf("Expected %d, got %d", mismatch["expected"], mismatch["actual"])
+		_ = w.repo.RecordMismatch(ctx, run.ID, "WALLET", walletID, "BALANCE_MISMATCH", mismatchDetails)
+		slog.Error("CRITICAL: Wallet balance mismatch detected!", "wallet_id", walletID, "mismatch", mismatchDetails)
 	}
 
 	// 3. Complete Run
