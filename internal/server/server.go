@@ -62,7 +62,7 @@ func NewServer(cfg *config.Config, db *database.DB, rdb *redis.Client) *Server {
 
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		_, _ = w.Write([]byte("OK"))
 	})
 
 	r.Get("/ready", func(w http.ResponseWriter, r *http.Request) {
@@ -72,7 +72,7 @@ func NewServer(cfg *config.Config, db *database.DB, rdb *redis.Client) *Server {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("READY"))
+		_, _ = w.Write([]byte("READY"))
 	})
 
 	// Init Auth

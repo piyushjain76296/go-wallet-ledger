@@ -52,7 +52,7 @@ func (h *Handler) HandleCreatePayment(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(payment)
+	_ = json.NewEncoder(w).Encode(payment)
 }
 
 func (h *Handler) HandleWebhook(w http.ResponseWriter, r *http.Request) {
@@ -119,5 +119,5 @@ func (h *Handler) HandleDemoFund(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"status": "success"}`))
+	_, _ = w.Write([]byte(`{"status": "success"}`))
 }

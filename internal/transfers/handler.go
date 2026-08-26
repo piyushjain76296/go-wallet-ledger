@@ -65,7 +65,7 @@ func (h *Handler) HandleTransfer(w http.ResponseWriter, r *http.Request) {
 		// Already completed, return cached response
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(idemRecord.ResponseStatus)
-		w.Write(idemRecord.ResponsePayload)
+		_, _ = w.Write(idemRecord.ResponsePayload)
 		return
 	}
 
@@ -91,5 +91,5 @@ func (h *Handler) HandleTransfer(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	w.Write(respBytes)
+	_, _ = w.Write(respBytes)
 }

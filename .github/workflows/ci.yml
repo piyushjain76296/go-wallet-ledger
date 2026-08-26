@@ -39,7 +39,7 @@ jobs:
     - name: Run golangci-lint
       uses: golangci/golangci-lint-action@v6
       with:
-        version: v1.55.2
+        version: v1.57.2
 
     - name: Install goose
       run: go install github.com/pressly/goose/v3/cmd/goose@latest

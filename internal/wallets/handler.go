@@ -54,7 +54,7 @@ func (h *Handler) HandleCreateWallet(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(wallet)
+	_ = json.NewEncoder(w).Encode(wallet)
 }
 
 func (h *Handler) HandleGetWallet(w http.ResponseWriter, r *http.Request) {
@@ -80,7 +80,7 @@ func (h *Handler) HandleGetWallet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(wallet)
+	_ = json.NewEncoder(w).Encode(wallet)
 }
 
 func (h *Handler) HandleGetBalance(w http.ResponseWriter, r *http.Request) {
@@ -106,7 +106,7 @@ func (h *Handler) HandleGetBalance(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(balance)
+	_ = json.NewEncoder(w).Encode(balance)
 }
 
 func (h *Handler) HandleFreezeWallet(w http.ResponseWriter, r *http.Request) {
@@ -158,7 +158,7 @@ func (h *Handler) HandleGetTransactions(w http.ResponseWriter, r *http.Request) 
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(transactions)
+	_ = json.NewEncoder(w).Encode(transactions)
 }
 
 func (h *Handler) HandleGetWallets(w http.ResponseWriter, r *http.Request) {
@@ -175,5 +175,5 @@ func (h *Handler) HandleGetWallets(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(wallets)
+	_ = json.NewEncoder(w).Encode(wallets)
 }
