@@ -1,0 +1,32 @@
+# Binaries
+wallet-api
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Environments
+.env
+
+# Go workspace
+go.work
+go.work.sum
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.eslintcache
+frontend/.env.local
+frontend/.env.*.local
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker
+volumes/
+data/
