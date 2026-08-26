@@ -44,7 +44,9 @@ func (w *Worker) processBatch(ctx context.Context) {
 	}
 
 	for _, ev := range events {
-		if err := w.processEvent(ctx, ev); err != nil {
+		err := w.producer.Publish(ctx, ev.Topic, ev.Payload)
+		if err != nil {
+			slog.Error("Failed to publish outbox event", "id", ev.ID, "error", err)
 			_ = w.repo.MarkFailed(ctx, ev.ID, err)
 			continue
 		}

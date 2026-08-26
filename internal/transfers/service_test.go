@@ -117,7 +117,7 @@ func TestTransferService_Concurrency(t *testing.T) {
 
 	// Assert Ledger Invariant
 	var totalDebits, totalCredits int64
-	db.QueryRow(ctx, `
+	_ = db.QueryRow(ctx, `
 		SELECT 
 			SUM(CASE WHEN direction = 'DEBIT' THEN amount ELSE 0 END),
 			SUM(CASE WHEN direction = 'CREDIT' THEN amount ELSE 0 END)
