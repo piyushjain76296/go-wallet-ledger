@@ -78,6 +78,7 @@ func TestTransferService_Concurrency(t *testing.T) {
 				Currency:            "USD",
 			}
 			idemKey := fmt.Sprintf("w1-to-w2-%d", idx)
+			_, _ = db.Exec(ctx, "INSERT INTO idempotency_keys (key, status, request_payload) VALUES ($1, 'IN_PROGRESS', '{}')", idemKey)
 			_, err := transferSvc.ExecuteTransfer(ctx, req, idemKey)
 			if err != nil {
 				t.Errorf("Transfer failed: %v", err)
@@ -94,6 +95,7 @@ func TestTransferService_Concurrency(t *testing.T) {
 				Currency:            "USD",
 			}
 			idemKey := fmt.Sprintf("w2-to-w1-%d", idx)
+			_, _ = db.Exec(ctx, "INSERT INTO idempotency_keys (key, status, request_payload) VALUES ($1, 'IN_PROGRESS', '{}')", idemKey)
 			_, err := transferSvc.ExecuteTransfer(ctx, req, idemKey)
 			if err != nil {
 				t.Errorf("Transfer failed: %v", err)
