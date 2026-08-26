@@ -11,13 +11,13 @@
 
 <br />
 
-## 📖 Overview
+## Overview
 
 This repository contains a full-stack, enterprise-grade Wallet and Ledger system. It is designed to handle high-throughput financial transactions safely without losing data, preventing race conditions, and maintaining strict ACID compliance. 
 
 Built around a **Double-Entry Ledger** architecture, this engine ensures that money is never created or destroyed out of thin air—only transferred between immutable accounts.
 
-## ✨ Key Features
+## Key Features
 
 - **Double-Entry Ledger Architecture**: Financial records are strictly immutable. Every transfer creates perfectly balanced debit and credit entries.
 - **Idempotency Engine**: Transfer APIs are completely safe from network retries. Using Redis, duplicate requests (e.g., a user double-clicking "Pay") are caught and securely rejected or returned with cached responses.
@@ -29,7 +29,7 @@ Built around a **Double-Entry Ledger** architecture, this engine ensures that mo
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```mermaid
 graph TD
@@ -52,7 +52,7 @@ graph TD
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Docker and Docker Compose
@@ -78,7 +78,7 @@ graph TD
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 - `/cmd/api` - The main entrypoint for the Go API server.
 - `/internal` - Core domain logic.
@@ -93,7 +93,7 @@ graph TD
 
 ---
 
-## 🧪 Performance & Reliability
+## Performance & Reliability
 
 This system was battle-tested using `k6` to simulate high-throughput traffic. It successfully processes thousands of concurrent transactions while guaranteeing:
 1. Row-level database locks (`SELECT FOR UPDATE`) to prevent deadlocks and race conditions.
@@ -102,5 +102,5 @@ This system was battle-tested using `k6` to simulate high-throughput traffic. It
 
 ---
 
-## 📄 License
+## License
 This project is licensed under the MIT License - see the LICENSE file for details.
